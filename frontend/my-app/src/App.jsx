@@ -1,7 +1,12 @@
 import "./App.css";
+import CreatePost from "./features/createPost";
 
 function App() {
-  return <></>;
+  return (
+    <div className="layout">
+      <CreatePost />
+    </div>
+  );
 }
 
 export default App;
