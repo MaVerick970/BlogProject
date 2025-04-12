@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./createPost.css";
-import CreatePostForm from "./createPostForm";
 import PostCard from "./postCard";
+import GenericForm from "./genericForm";
 
 const CreatePost = () => {
   const [posts, setPosts] = useState([]);
@@ -9,6 +9,7 @@ const CreatePost = () => {
 
   const getPosts = () => {
     setLoading(true);
+
     fetch("http://localhost:4000/posts")
       .then((response) => response.json())
       .then((e) => {
@@ -22,6 +23,29 @@ const CreatePost = () => {
       });
   };
 
+  const onHandleSubmit = (e, formState) => {
+    e.preventDefault();
+
+    let postData = {
+      title: formState?.content,
+    };
+
+    fetch(`http://localhost:4000/posts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    })
+      .then((e) => {
+        console.log("Post is created", e);
+        getPosts();
+      })
+      .catch((err) => {
+        console.log("Something bad happened", err);
+      });
+  };
+
   useEffect(() => {
     getPosts();
   }, []);
@@ -29,7 +53,7 @@ const CreatePost = () => {
   return (
     <>
       <h1 className="heading">Create Post</h1>
-      <CreatePostForm refetch={getPosts} />
+      <GenericForm onHandleSubmit={onHandleSubmit} />
       <hr />
       {loading ? (
         <p>...loading</p>
